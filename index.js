@@ -300,7 +300,7 @@ HttpAdvancedAccessory.prototype = {
 		
 		var newService = new Service[this.service](this.name);
 		// create adaptive lighting controller for light bulbs
-		if (this.service == "Lightbulb" and this.optionCharacteristic.contains("ColorTemperature")) {
+		if (this.service == "Lightbulb" && this.optionCharacteristic.contains("ColorTemperature")) {
 			this.adaptiveLightingController = new AdaptiveLightingController(newService);
 		}
 
