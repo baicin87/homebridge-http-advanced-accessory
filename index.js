@@ -1,4 +1,4 @@
-var Service, Characteristic;
+var Service, Characteristic, AdaptiveLightingController;
 var request = require("request");
 var pollingtoevent = require("polling-to-event");
 var mappers = require("./mappers.js");
@@ -6,6 +6,7 @@ var mappers = require("./mappers.js");
 module.exports = function (homebridge) {
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
+	AdaptiveLightingController = homebridge.hap.AdaptiveLightingController;
 	homebridge.registerAccessory("homebridge-http-advanced-accessory", "HttpAdvancedAccessory", HttpAdvancedAccessory);
 };
 
@@ -20,8 +21,9 @@ function HttpAdvancedAccessory(log, config) {
 	this.enableSet = true;
 	this.statusEmitters = [];
 	this.state = {};
-	this.uriCalls=0;
+	this.uriCalls = 0;
 	this.uriCallsDelay = config.uriCallsDelay || 0;
+	this.adaptiveLightingController = null;
 	// process the mappers
 	var self = this;
 	self.debug = config.debug;
@@ -208,6 +210,14 @@ HttpAdvancedAccessory.prototype = {
 		var error = null;
 		callback(error, this.name);
 	},
+
+	getControllers: function () {
+	      if (!this.adaptiveLightingController) {
+		      return [];
+	      } else {
+		      return [this.adaptiveLightingController];
+	      }
+	},
 	
 	getServices: function () {
 		var getDispatch = function (callback, action) {
@@ -289,6 +299,10 @@ HttpAdvancedAccessory.prototype = {
 
 		
 		var newService = new Service[this.service](this.name);
+		// create adaptive lighting controller for light bulbs
+		if (this.service == "Lightbulb") {
+			this.adaptiveLightingController = new AdaptiveLightingController(newService);
+		}
 
 		var counters = [];
 		var optionCounters = [];
