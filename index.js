@@ -23,6 +23,7 @@ function HttpAdvancedAccessory(log, config) {
 	this.state = {};
 	this.uriCalls = 0;
 	this.uriCallsDelay = config.uriCallsDelay || 0;
+	this.enableAdaptiveLighting = config.adaptiveLighting || 0;
 	this.adaptiveLightingController = null;
 	// process the mappers
 	var self = this;
@@ -423,7 +424,7 @@ HttpAdvancedAccessory.prototype = {
 			};
 		}
 		// create adaptive lighting controller for light bulbs
-		if (this.service == "Lightbulb" && this.optionCharacteristic.indexOf("ColorTemperature") != -1) {
+		if (this.enableAdaptiveLighting && this.service == "Lightbulb" && this.optionCharacteristic.indexOf("ColorTemperature") != -1) {
 			this.adaptiveLightingController = new AdaptiveLightingController(newService);
 		}
 		return [informationService, newService];
