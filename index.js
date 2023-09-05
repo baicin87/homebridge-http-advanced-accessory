@@ -299,11 +299,7 @@ HttpAdvancedAccessory.prototype = {
 
 		
 		var newService = new Service[this.service](this.name);
-		// create adaptive lighting controller for light bulbs
-		if (this.service == "Lightbulb" && this.optionCharacteristic.indexOf("ColorTemperature") != -1) {
-			this.adaptiveLightingController = new AdaptiveLightingController(newService);
-		}
-
+		
 		var counters = [];
 		var optionCounters = [];
 
@@ -425,6 +421,10 @@ HttpAdvancedAccessory.prototype = {
 					}	
 				}
 			};
+		}
+		// create adaptive lighting controller for light bulbs
+		if (this.service == "Lightbulb" && this.optionCharacteristic.indexOf("ColorTemperature") != -1) {
+			this.adaptiveLightingController = new AdaptiveLightingController(newService);
 		}
 		return [informationService, newService];
 	}
